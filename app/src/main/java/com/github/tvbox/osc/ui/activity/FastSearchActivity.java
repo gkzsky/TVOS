@@ -30,6 +30,7 @@ import com.github.tvbox.osc.ui.adapter.FastSearchAdapter;
 import com.github.tvbox.osc.ui.adapter.SearchWordAdapter;
 
 import com.github.tvbox.osc.util.FastClickCheckUtil;
+import com.github.tvbox.osc.util.SearchHelper;
 import com.github.tvbox.osc.util.js.JSEngine;
 import com.github.tvbox.osc.viewmodel.SourceViewModel;
 import com.google.gson.Gson;
@@ -91,16 +92,16 @@ public class FastSearchActivity extends BaseActivity {
         @Override
         public void onFocusChange(View itemView, boolean hasFocus) {
             try {
-                if(!hasFocus){
+                if (!hasFocus) {
                     spListAdapter.onLostFocus(itemView);
-                }else{
+                } else {
                     int ret = spListAdapter.onSetFocus(itemView);
-                    if(ret < 0) return;
+                    if (ret < 0) return;
                     TextView v = (TextView) itemView;
                     String sb = v.getText().toString();
                     filterResult(sb);
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 Toast.makeText(FastSearchActivity.this,e.toString(), Toast.LENGTH_SHORT).show();
             }
 
@@ -115,7 +116,7 @@ public class FastSearchActivity extends BaseActivity {
     @Override
     protected void init() {
         spNames = new HashMap<String, String>();
-        resultVods = new HashMap<String, ArrayList<Movie.Video> >();
+        resultVods = new HashMap<String, ArrayList<Movie.Video>>();
         initView();
         initViewModel();
         initData();
@@ -162,8 +163,8 @@ public class FastSearchActivity extends BaseActivity {
             public void onChildViewAttachedToWindow(@NonNull View child) {
                 child.setFocusable(true);
                 child.setOnFocusChangeListener(focusChangeListener);
-                TextView t = (TextView)child;
-                if(t.getText() == "全部显示"){
+                TextView t = (TextView) child;
+                if (t.getText() == "全部显示") {
                     t.requestFocus();
                 }
 //                if (child.isFocusable() && null == child.getOnFocusChangeListener()) {
@@ -268,9 +269,9 @@ public class FastSearchActivity extends BaseActivity {
             return;
         }
         String key = spNames.get(spName);
-        if(key.isEmpty()) return;
+        if (key.isEmpty()) return;
 
-        if(searchFilterKey == key) return;
+        if (searchFilterKey == key) return;
         searchFilterKey = key;
 
         List<Movie.Video> list = resultVods.get(key);
@@ -279,8 +280,8 @@ public class FastSearchActivity extends BaseActivity {
         mGridViewFilter.setVisibility(View.VISIBLE);
     }
 
-    private void fenci(){
-        if(!quickSearchWord.isEmpty()) return; // 如果经有分词了，不再进行二次分词
+    private void fenci() {
+        if (!quickSearchWord.isEmpty()) return; // 如果经有分词了，不再进行二次分词
         // 分词
         OkGo.<String>get("http://api.pullword.com/get.php?source=" + URLEncoder.encode(searchTitle) + "&param1=0&param2=0&json=1")
                 .tag("fenci")
@@ -335,7 +336,7 @@ public class FastSearchActivity extends BaseActivity {
  
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refresh(RefreshEvent event) {
-        if(mSearchTitle != null){
+        if (mSearchTitle != null) {
             mSearchTitle.setText(String.format("搜索(%d/%d)", finishedCount, spNames.size()));
         }
         if (event.type == RefreshEvent.TYPE_SEARCH_RESULT) {
